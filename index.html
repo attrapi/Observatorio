@@ -459,6 +459,44 @@
   .gallery.few-1 .gallery-item { grid-column: span 12; aspect-ratio: 16 / 9; }
   .gallery.few-2 .gallery-item { grid-column: span 6; aspect-ratio: 4 / 3; }
 
+  /* VIDEOS */
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .video-card {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    overflow: hidden;
+    position: relative;
+    aspect-ratio: 16 / 9;
+  }
+
+  .video-card video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    background: #000;
+  }
+
+  .video-placeholder {
+    text-align: center;
+    color: var(--text-soft);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 18px;
+    padding: 60px 20px;
+    border: 1px dashed var(--line);
+    max-width: 1400px;
+    margin: 0 auto;
+    letter-spacing: 0.02em;
+  }
+
   /* LIGHTBOX */
   .lightbox {
     position: fixed;
@@ -562,6 +600,7 @@
     section.area { padding: 80px 5%; }
     .sub-header { flex-wrap: wrap; gap: 8px; }
     .split-2 { grid-template-columns: 1fr; gap: 32px; }
+    .video-grid { grid-template-columns: 1fr; gap: 16px; }
   }
 
   /* ============================================================
@@ -587,11 +626,11 @@
       font-size: 9pt;
     }
 
-    /* Ocultar todo el chrome y elementos no esenciales */
+    /* Ocultar todo el chrome y elementos no esenciales (incluida la seccion de Videos) */
     nav, .scroll-hint, .lightbox, .btn-print, footer,
     .eyebrow, .hero p, .hero-meta, .section-desc, .sub-meta,
     .section-num, .section-subtitle, .gallery-item .label,
-    .gallery-item::after { display: none !important; }
+    .gallery-item::after, #videos { display: none !important; }
 
     .reveal { opacity: 1 !important; transform: none !important; }
 
@@ -764,6 +803,7 @@
       <li><a href="#edificio-a">Edificio A</a></li>
       <li><a href="#edificio-b">Edificio B</a></li>
       <li><a href="#edificio-c">Edificio C</a></li>
+      <li><a href="#videos">Videos</a></li>
     </ul>
     <button class="btn-print" id="btn-print" aria-label="Imprimir documento">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -787,11 +827,11 @@
         <span class="meta-label">Edificios</span>
       </div>
       <div class="meta-item">
-        <span class="meta-num">07</span>
+        <span class="meta-num">08</span>
         <span class="meta-label">Áreas</span>
       </div>
       <div class="meta-item">
-        <span class="meta-num">23</span>
+        <span class="meta-num">25</span>
         <span class="meta-label">Vistas</span>
       </div>
     </div>
@@ -899,7 +939,23 @@
   <div class="section-end"><span>Fin del Edificio C · 3G · FONADIN · DICCO · R.O. Puente Atirantado (Eloy)</span></div>
 </section>
 
-<footer
+<!-- SECCIÓN 05 — VIDEOS -->
+<section class="area" id="videos">
+  <div class="section-header reveal">
+    <div class="section-title-wrap">
+      <div class="section-num">Sección 05</div>
+      <h2 class="section-title">Videos</h2>
+      <div class="section-subtitle">Recorrido en movimiento</div>
+    </div>
+    <p class="section-desc">Material audiovisual del recorrido por los espacios del complejo.</p>
+  </div>
+  <div class="subsection reveal">
+    <div class="video-grid" id="video-grid"></div>
+    <p class="video-placeholder" id="video-placeholder">Próximamente — material audiovisual en proceso.</p>
+  </div>
+</section>
+
+<footer>
   <div class="brand">Observatorio<span>.</span></div>
   <p>Recorrido · 06-05-2026</p>
 </footer>
@@ -934,7 +990,7 @@
     'b': {
       folder: 'Edificio B',
       label: 'Edificio B · Supervisión Externa',
-      files: ['1.jpeg','2.jpeg']
+      files: ['1.jpeg','2.jpeg','3.jpeg','4.jpeg']
     },
     'c-ext': {
       folder: 'Edificio C/Exterior - C',
@@ -957,6 +1013,36 @@
   function buildSrc(folder, file) {
     return folder.split('/').map(encodeURIComponent).join('/') + '/' + encodeURIComponent(file);
   }
+
+  // Videos
+  const videos = {
+    folder: 'Videos',
+    files: [
+      'WhatsApp Video 2026-05-06 at 5.01.58 PM.mp4',
+      'WhatsApp Video 2026-05-06 at 5.02.08 PM.mp4',
+      'WhatsApp Video 2026-05-06 at 6.41.56 PM.mp4',
+      'WhatsApp Video 2026-05-06 at 6.42.35 PM.mp4'
+    ]
+  };
+
+  (function renderVideos() {
+    const grid = document.getElementById('video-grid');
+    const placeholder = document.getElementById('video-placeholder');
+    if (!grid) return;
+    if (!videos.files.length) return;
+    placeholder.style.display = 'none';
+    videos.files.forEach((file, idx) => {
+      const card = document.createElement('div');
+      card.className = 'video-card reveal';
+      card.innerHTML = `
+        <video controls preload="metadata" playsinline>
+          <source src="${buildSrc(videos.folder, file)}" type="video/mp4">
+          Tu navegador no soporta video HTML5.
+        </video>
+      `;
+      grid.appendChild(card);
+    });
+  })();
 
   // Render galleries
   Object.entries(galleries).forEach(([key, data]) => {

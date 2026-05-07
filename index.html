@@ -333,6 +333,16 @@
   }
   .subsection:last-child { margin-bottom: 0; }
 
+  /* Two subsections side by side (e.g. Planta Baja + Planta Alta) */
+  .split-2 {
+    max-width: 1400px;
+    margin: 0 auto 64px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .split-2 .subsection { margin: 0; max-width: none; }
+
   .sub-header {
     display: flex;
     align-items: baseline;
@@ -551,6 +561,7 @@
     .hero-meta { gap: 32px; }
     section.area { padding: 80px 5%; }
     .sub-header { flex-wrap: wrap; gap: 8px; }
+    .split-2 { grid-template-columns: 1fr; gap: 32px; }
   }
 
   /* ============================================================
@@ -635,6 +646,15 @@
       page-break-inside: avoid;
       break-inside: avoid;
     }
+    .split-2 {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 6mm !important;
+      margin-bottom: 6mm;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .split-2 .subsection { margin: 0 !important; }
     .sub-header {
       margin-bottom: 4mm;
       padding-bottom: 2mm;
@@ -760,20 +780,22 @@
     <p class="section-desc">Espacios destinados al personal a cargo del seguimiento de asuntos estratégicos del complejo.</p>
   </div>
 
-  <div class="subsection reveal">
-    <div class="sub-header">
-      <h3 class="sub-title">Planta Baja</h3>
-      <span class="sub-meta" data-count="a-pb"></span>
+  <div class="split-2 reveal">
+    <div class="subsection">
+      <div class="sub-header">
+        <h3 class="sub-title">Planta Baja</h3>
+        <span class="sub-meta" data-count="a-pb"></span>
+      </div>
+      <div class="gallery" data-gallery="a-pb"></div>
     </div>
-    <div class="gallery" data-gallery="a-pb"></div>
-  </div>
 
-  <div class="subsection reveal">
-    <div class="sub-header">
-      <h3 class="sub-title">Planta Alta</h3>
-      <span class="sub-meta" data-count="a-pa"></span>
+    <div class="subsection">
+      <div class="sub-header">
+        <h3 class="sub-title">Planta Alta</h3>
+        <span class="sub-meta" data-count="a-pa"></span>
+      </div>
+      <div class="gallery" data-gallery="a-pa"></div>
     </div>
-    <div class="gallery" data-gallery="a-pa"></div>
   </div>
 </section>
 

@@ -722,13 +722,20 @@
       margin: 0 !important;
     }
 
-    /* GALLERY — 2 columnas con padding interno, fluye entre paginas */
+    /* GALLERY — 2 columnas uniformes en impresion, anula layouts count-N de pantalla */
     .gallery {
       display: grid !important;
       grid-template-columns: repeat(2, 1fr) !important;
       gap: 6mm !important;
       page-break-inside: auto;
     }
+    .gallery .gallery-item,
+    .gallery.count-3 .gallery-item:nth-child(n),
+    .gallery.count-4 .gallery-item:nth-child(n),
+    .gallery.count-5 .gallery-item:nth-child(n),
+    .gallery.count-6 .gallery-item:nth-child(n),
+    .gallery.count-7 .gallery-item:nth-child(n),
+    .gallery.count-8 .gallery-item:nth-child(n),
     .gallery .gallery-item:nth-child(n) {
       grid-column: span 1 !important;
       aspect-ratio: 4 / 3 !important;
@@ -740,6 +747,7 @@
       transform: none !important;
       overflow: hidden;
       box-sizing: border-box;
+      margin: 0 !important;
     }
     .gallery.few-1 .gallery-item { grid-column: span 2 !important; aspect-ratio: 16 / 9 !important; }
     .gallery.few-2 .gallery-item { grid-column: span 1 !important; aspect-ratio: 4 / 3 !important; }

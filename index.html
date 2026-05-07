@@ -476,6 +476,127 @@
     aspect-ratio: 4 / 3 !important;
   }
 
+  /* PILDORA "PLANO" + VISTA DE PLANO INLINE */
+  .btn-plan {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px 6px 12px;
+    border-radius: 999px;
+    background: rgba(232, 200, 140, 0.06);
+    border: 1px solid rgba(232, 200, 140, 0.4);
+    color: var(--accent);
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    flex-shrink: 0;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .btn-plan svg {
+    width: 13px;
+    height: 13px;
+    stroke-width: 1.8;
+  }
+  .btn-plan:hover {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(232, 200, 140, 0.18);
+  }
+  .btn-plan.active {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+  .btn-plan .btn-plan-caret {
+    width: 9px;
+    height: 9px;
+    margin-left: 2px;
+    transition: transform 0.3s ease;
+    opacity: 0.7;
+  }
+  .btn-plan.active .btn-plan-caret { transform: rotate(180deg); }
+
+  /* Pildora flotante para Edificio B (sin sub-header propio) */
+  .section-actions {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .plan-view {
+    display: none;
+    margin: 18px 0 0;
+    border: 1px solid var(--line);
+    background: linear-gradient(180deg, rgba(232,200,140,0.04), rgba(0,0,0,0.15));
+    overflow: hidden;
+    position: relative;
+    border-radius: 4px;
+  }
+  .plan-view.open {
+    display: block;
+    animation: planExpand 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  @keyframes planExpand {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .plan-view img {
+    display: block;
+    width: 100%;
+    max-height: 78vh;
+    object-fit: contain;
+    background: #f7efe2;
+    padding: 24px;
+    cursor: zoom-in;
+  }
+  .plan-view::before {
+    content: 'PLANO';
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    z-index: 2;
+    background: rgba(105, 28, 50, 0.95);
+    color: var(--accent);
+    font-family: var(--sans);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    padding: 6px 12px;
+    border-radius: 999px;
+    pointer-events: none;
+  }
+  .plan-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 3;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(105, 28, 50, 0.95);
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+  .plan-close:hover {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
   /* Video integrado dentro de cada subseccion */
   .subsection-video {
     margin-top: 18px;
@@ -556,6 +677,10 @@
   .lightbox-close { top: 30px; right: 30px; }
   .lightbox-prev { left: 30px; top: 50%; transform: translateY(-50%); }
   .lightbox-next { right: 30px; top: 50%; transform: translateY(-50%); }
+
+  .lightbox.plan-mode .lightbox-prev,
+  .lightbox.plan-mode .lightbox-next { display: none; }
+  .lightbox.plan-mode img { background: #f7efe2; padding: 24px; }
 
   .lightbox-counter {
     position: absolute;
@@ -641,7 +766,8 @@
     nav, .scroll-hint, .lightbox, .btn-print, footer,
     .eyebrow, .hero p, .hero-meta, .section-desc, .sub-meta,
     .section-num, .section-subtitle, .gallery-item .label,
-    .gallery-item::after, .subsection-video, video { display: none !important; }
+    .gallery-item::after, .subsection-video, video,
+    .btn-plan, .plan-close, .print-skip { display: none !important; }
 
     .reveal { opacity: 1 !important; transform: none !important; }
 
@@ -758,6 +884,44 @@
       object-fit: cover !important;
       display: block !important;
     }
+
+    /* PLANO en impresion — siempre visible, antes de la galeria */
+    .plan-view {
+      display: block !important;
+      margin: 0 0 4mm !important;
+      padding: 0 !important;
+      border: 1px solid #c9a96e !important;
+      background: #ffffff !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      animation: none !important;
+      border-radius: 0 !important;
+      position: relative;
+    }
+    .plan-view::before {
+      content: 'PLANO' !important;
+      position: absolute !important;
+      top: 2mm !important;
+      left: 2mm !important;
+      background: #ffffff !important;
+      color: #691c32 !important;
+      border: 1px solid #691c32 !important;
+      font-size: 7pt !important;
+      letter-spacing: 0.22em !important;
+      padding: 1mm 2mm !important;
+      border-radius: 999px !important;
+    }
+    .plan-view img {
+      width: 100% !important;
+      max-height: 80mm !important;
+      height: auto !important;
+      object-fit: contain !important;
+      background: #ffffff !important;
+      padding: 3mm !important;
+      cursor: default !important;
+    }
+    /* En split-2 (Edificio A), planos un poco mas compactos para que quepan bien */
+    .split-2 .plan-view img { max-height: 55mm !important; }
 
     /* Cierre por edificio + cierre general del recorrido */
     .section-end {
@@ -935,7 +1099,7 @@
     <p class="section-desc">Edificio compartido por varias unidades, organizadas por planta y por función operativa.</p>
   </div>
 
-  <div class="subsection reveal">
+  <div class="subsection reveal print-skip">
     <div class="sub-header">
       <h3 class="sub-title">Exterior C</h3>
       <span class="sub-meta" data-count="c-ext"></span>
@@ -945,7 +1109,7 @@
 
   <div class="subsection reveal">
     <div class="sub-header">
-      <h3 class="sub-title">Planta Baja — 3G y FONADIN</h3>
+      <h3 class="sub-title">Edificio C · Planta Baja — 3G y FONADIN</h3>
       <span class="sub-meta" data-count="c-pb"></span>
     </div>
     <div class="gallery" data-gallery="c-pb"></div>
@@ -953,7 +1117,7 @@
 
   <div class="subsection reveal">
     <div class="sub-header">
-      <h3 class="sub-title">Planta Alta — DICCO y R.O. Puente Atirantado (Eloy)</h3>
+      <h3 class="sub-title">Edificio C · Planta Alta — DICCO y R.O. Puente Atirantado (Eloy)</h3>
       <span class="sub-meta" data-count="c-pa"></span>
     </div>
     <div class="gallery" data-gallery="c-pa"></div>
@@ -987,17 +1151,20 @@
       folder: 'Edificio A Planta Baja',
       label: 'Edificio A · Planta Baja',
       files: ['3.jpeg'],
-      video: 'Edificio_A.mp4'
+      video: 'Edificio_A.mp4',
+      plan: 'plano-PB,EDA.png'
     },
     'a-pa': {
       folder: 'Edificio A Planta Alta',
       label: 'Edificio A · Planta Alta',
-      files: ['16.jpeg']
+      files: ['16.jpeg'],
+      plan: 'plano-edificio-A-PA.png'
     },
     'b': {
       folder: 'Edificio B',
       label: 'Edificio B · Supervisión Externa',
-      files: ['1.jpeg','2.jpeg','3.jpeg','4.jpeg','5.jpeg']
+      files: ['1.jpeg','2.jpeg','3.jpeg','4.jpeg','5.jpeg'],
+      plan: 'edificio-B.plano.png'
     },
     'c-ext': {
       folder: 'Edificio C/Exterior - C',
@@ -1009,13 +1176,15 @@
       folder: 'Edificio C/C - Planta Baja',
       label: 'Edificio C · Planta Baja (3G y FONADIN)',
       files: ['2.jpeg','4.jpeg','5.jpeg','6.jpeg'],
-      video: 'Edificio C Planta Baja.mp4'
+      video: 'Edificio C Planta Baja.mp4',
+      plan: 'edificioC-PA-Plano.png'
     },
     'c-pa': {
       folder: 'Edificio C/C - Planta Alta',
       label: 'Edificio C · Planta Alta (DICCO y R.O. Puente Atirantado (Eloy))',
       files: ['8.jpeg','9.jpeg','10.jpeg','11.jpeg','12.jpeg','19.jpeg'],
-      video: 'Edificio C Planta Alta.mp4'
+      video: 'Edificio C Planta Alta.mp4',
+      plan: 'C-PA-Plano.png'
     }
   };
 
@@ -1061,6 +1230,74 @@
       container.parentElement.appendChild(vid);
     }
 
+    // Inyectar pildora "Plano" y vista expandible del plano (si existe)
+    if (data.plan) {
+      const subHeader = container.parentElement.querySelector('.sub-header');
+      const sectionEl = container.closest('section.area');
+
+      // Crear la pildora
+      const pill = document.createElement('button');
+      pill.type = 'button';
+      pill.className = 'btn-plan';
+      pill.setAttribute('aria-pressed', 'false');
+      pill.setAttribute('aria-label', 'Mostrar plano de ' + data.label);
+      pill.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="3" width="18" height="18" rx="1.5"/>
+          <path d="M3 11h11"/>
+          <path d="M14 3v18"/>
+          <path d="M14 15h7"/>
+        </svg>
+        <span>Plano</span>
+        <svg class="btn-plan-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9"/>
+        </svg>
+      `;
+
+      // Crear la vista del plano
+      const planView = document.createElement('div');
+      planView.className = 'plan-view';
+      planView.innerHTML = `
+        <button class="plan-close" type="button" aria-label="Cerrar plano">×</button>
+        <img src="${buildSrc(data.folder, data.plan)}" alt="${data.label} — Plano arquitectónico" loading="lazy">
+      `;
+
+      // Insertar la vista del plano antes de la galeria, dentro de la subseccion
+      container.parentElement.insertBefore(planView, container);
+
+      // Insertar la pildora en el sub-header (antes del .sub-meta) o en una zona de acciones del section-header
+      if (subHeader) {
+        const meta = subHeader.querySelector('.sub-meta');
+        if (meta) subHeader.insertBefore(pill, meta);
+        else subHeader.appendChild(pill);
+      } else if (sectionEl) {
+        const titleWrap = sectionEl.querySelector('.section-title-wrap');
+        if (titleWrap) {
+          let actions = titleWrap.querySelector('.section-actions');
+          if (!actions) {
+            actions = document.createElement('div');
+            actions.className = 'section-actions';
+            titleWrap.appendChild(actions);
+          }
+          actions.appendChild(pill);
+        }
+      }
+
+      // Toggle handlers
+      const togglePlan = (open) => {
+        const isOpen = open !== undefined ? open : !planView.classList.contains('open');
+        planView.classList.toggle('open', isOpen);
+        pill.classList.toggle('active', isOpen);
+        pill.setAttribute('aria-pressed', String(isOpen));
+      };
+      pill.addEventListener('click', () => togglePlan());
+      planView.querySelector('.plan-close').addEventListener('click', () => togglePlan(false));
+
+      // Click en la imagen abre el plano en el lightbox a tamano completo
+      const planImg = planView.querySelector('img');
+      planImg.addEventListener('click', () => openPlanLightbox(key));
+    }
+
     const meta = document.querySelector(`.sub-meta[data-count="${key}"]`);
     if (meta) {
       const parts = [`${String(n).padStart(2,'0')} ${n === 1 ? 'Vista' : 'Vistas'}`];
@@ -1079,7 +1316,20 @@
   function openLightbox(galleryKey, index) {
     currentGallery = galleryKey;
     currentIndex = index;
+    lb.classList.remove('plan-mode');
     updateLightbox();
+    lb.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openPlanLightbox(galleryKey) {
+    const data = galleries[galleryKey];
+    if (!data || !data.plan) return;
+    currentGallery = null;
+    lbImg.src = buildSrc(data.folder, data.plan);
+    lbImg.alt = data.label + ' — Plano';
+    lbCounter.innerHTML = `${data.label}<br><em>Plano arquitectónico</em>`;
+    lb.classList.add('plan-mode');
     lb.classList.add('active');
     document.body.style.overflow = 'hidden';
   }
@@ -1096,6 +1346,7 @@
   }
 
   function navLightbox(dir) {
+    if (!currentGallery) return;
     const data = galleries[currentGallery];
     currentIndex = (currentIndex + dir + data.files.length) % data.files.length;
     updateLightbox();

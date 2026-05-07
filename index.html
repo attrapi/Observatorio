@@ -570,7 +570,7 @@
   @media print {
     @page {
       size: A4;
-      margin: 18mm 18mm 18mm 18mm;
+      margin: 20mm 22mm 20mm 22mm;
     }
 
     * {
@@ -617,9 +617,9 @@
     }
     .hero h1 br, .hero h1 em { display: none !important; }
 
-    /* SECCIONES — flujo natural, sin saltos de pagina forzados */
+    /* SECCIONES — flujo natural, con padding lateral para respirar */
     section.area {
-      padding: 0 !important;
+      padding: 0 5mm !important;
       margin-bottom: 4mm;
       border-top: none !important;
       background: #ffffff !important;
@@ -629,7 +629,7 @@
 
     .section-header {
       margin: 4mm 0 3mm !important;
-      padding-bottom: 2mm;
+      padding: 0 0 2mm 0 !important;
       border-bottom: 1.5px solid #691c32;
       display: block !important;
       page-break-after: avoid;
@@ -905,7 +905,7 @@
 
 <footer>
   <div class="brand">Observatorio<span>.</span></div>
-  <p>Documentación visual del complejo · 2026</p>
+  <p>Recorrido · 06-05-2026</p>
 </footer>
 
 <!-- LIGHTBOX -->

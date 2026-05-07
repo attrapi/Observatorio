@@ -570,7 +570,7 @@
   @media print {
     @page {
       size: A4;
-      margin: 16mm 15mm 16mm 15mm;
+      margin: 18mm 18mm 18mm 18mm;
     }
 
     * {
@@ -643,25 +643,23 @@
       margin: 0 !important;
     }
 
-    /* SUBSECCIONES — apretadas, sin partir bloques */
+    /* SUBSECCIONES — fluyen entre paginas para no dejar huecos */
     .subsection {
-      margin: 0 0 4mm !important;
+      margin: 0 0 5mm !important;
       max-width: none !important;
-      page-break-inside: avoid;
-      break-inside: avoid;
     }
     .split-2 {
       display: grid !important;
       grid-template-columns: 1fr 1fr !important;
-      gap: 4mm !important;
-      margin: 0 0 4mm !important;
+      gap: 5mm !important;
+      margin: 0 0 5mm !important;
       page-break-inside: avoid;
       break-inside: avoid;
     }
     .split-2 .subsection { margin: 0 !important; }
     .sub-header {
-      margin: 0 0 2mm !important;
-      padding: 0 0 1mm !important;
+      margin: 0 0 3mm !important;
+      padding: 0 0 1.5mm !important;
       border-bottom: 1px solid #c9a96e !important;
       page-break-after: avoid;
       break-after: avoid;
@@ -673,11 +671,11 @@
       margin: 0 !important;
     }
 
-    /* GALLERY — 2 columnas, alto fijo para llenar pagina sin huecos */
+    /* GALLERY — 2 columnas con padding interno, fluye entre paginas */
     .gallery {
       display: grid !important;
       grid-template-columns: repeat(2, 1fr) !important;
-      gap: 3mm !important;
+      gap: 6mm !important;
       page-break-inside: auto;
     }
     .gallery .gallery-item:nth-child(n) {
@@ -685,10 +683,12 @@
       aspect-ratio: 4 / 3 !important;
       page-break-inside: avoid;
       break-inside: avoid;
-      border: 1px solid #c0c0c0 !important;
+      padding: 2mm !important;
+      border: 1px solid #c9a96e !important;
       background: #ffffff !important;
       transform: none !important;
       overflow: hidden;
+      box-sizing: border-box;
     }
     .gallery.few-1 .gallery-item { grid-column: span 2 !important; aspect-ratio: 16 / 9 !important; }
     .gallery.few-2 .gallery-item { grid-column: span 1 !important; aspect-ratio: 4 / 3 !important; }
@@ -700,9 +700,57 @@
       display: block !important;
     }
 
+    /* Cierre por edificio + cierre general del recorrido */
+    .section-end {
+      display: block !important;
+      text-align: center;
+      margin: 8mm 0 2mm;
+      padding-top: 4mm;
+      border-top: 1px solid #c9a96e;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      page-break-before: avoid;
+      break-before: avoid;
+    }
+    .section-end span {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 9pt;
+      letter-spacing: 0.18em;
+      color: #691c32;
+      text-transform: uppercase;
+    }
+    .print-footer {
+      display: block !important;
+      text-align: center;
+      margin-top: 10mm;
+      padding-top: 5mm;
+      border-top: 1.5px solid #691c32;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .print-footer .pf-brand {
+      font-family: var(--serif);
+      font-size: 13pt;
+      color: #691c32;
+      letter-spacing: -0.01em;
+      display: block;
+      margin-bottom: 2mm;
+    }
+    .print-footer .pf-meta {
+      font-family: var(--sans);
+      font-size: 9pt;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #691c32;
+    }
+
     h1, h2, h3 { page-break-after: avoid; }
     a, a:visited { color: inherit !important; text-decoration: none !important; }
   }
+
+  /* Elementos solo de impresion: ocultos en pantalla */
+  .section-end, .print-footer { display: none; }
 </style>
 </head>
 <body>
@@ -763,6 +811,7 @@
   <div class="subsection reveal">
     <div class="gallery" data-gallery="exterior"></div>
   </div>
+  <div class="section-end"><span>Fin del Exterior · Entorno y Contexto</span></div>
 </section>
 
 <!-- SECCIÓN 02 — EDIFICIO A -->
@@ -793,6 +842,7 @@
       <div class="gallery" data-gallery="a-pa"></div>
     </div>
   </div>
+  <div class="section-end"><span>Fin del Edificio A · Personal de Seguimiento de Asuntos Estratégicos</span></div>
 </section>
 
 <!-- SECCIÓN 03 — EDIFICIO B -->
@@ -808,6 +858,7 @@
   <div class="subsection reveal">
     <div class="gallery" data-gallery="b"></div>
   </div>
+  <div class="section-end"><span>Fin del Edificio B · Supervisión Externa</span></div>
 </section>
 
 <!-- SECCIÓN 04 — EDIFICIO C -->
@@ -844,7 +895,13 @@
     </div>
     <div class="gallery" data-gallery="c-pa"></div>
   </div>
+  <div class="section-end"><span>Fin del Edificio C · 3G · JONADIN · DICCO · Personal de Eloy</span></div>
 </section>
+
+<div class="print-footer">
+  <span class="pf-brand">Observatorio<span style="color:#c9a96e">.</span></span>
+  <span class="pf-meta">Recorrido · 06-05-2026</span>
+</div>
 
 <footer>
   <div class="brand">Observatorio<span>.</span></div>

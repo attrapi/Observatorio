@@ -907,19 +907,7 @@
       border-radius: 0 !important;
       position: relative;
     }
-    .plan-view::before {
-      content: 'PLANO' !important;
-      position: absolute !important;
-      top: 2mm !important;
-      left: 2mm !important;
-      background: #ffffff !important;
-      color: #691c32 !important;
-      border: 1px solid #691c32 !important;
-      font-size: 7pt !important;
-      letter-spacing: 0.22em !important;
-      padding: 1mm 2mm !important;
-      border-radius: 999px !important;
-    }
+    .plan-view::before { display: none !important; content: none !important; }
     .plan-view img {
       width: 100% !important;
       max-height: 80mm !important;
@@ -1263,12 +1251,12 @@
         </svg>
       `;
 
-      // Crear la vista del plano
+      // Crear la vista del plano (sin lazy para que este disponible al imprimir)
       const planView = document.createElement('div');
       planView.className = 'plan-view';
       planView.innerHTML = `
         <button class="plan-close" type="button" aria-label="Cerrar plano">×</button>
-        <img src="${buildSrc(data.folder, data.plan)}" alt="${data.label} — Plano arquitectónico" loading="lazy">
+        <img src="${buildSrc(data.folder, data.plan)}" alt="${data.label} — Plano arquitectónico">
       `;
 
       // Insertar la vista del plano antes de la galeria, dentro de la subseccion
@@ -1373,11 +1361,11 @@
     if (e.key === 'ArrowRight') navLightbox(1);
   });
 
-  // Print button — make sure all lazy images are loaded before opening dialog
+  // Print button — make sure all lazy images (galeria + planos) are loaded before opening dialog
   document.getElementById('btn-print').addEventListener('click', async () => {
-    const imgs = Array.from(document.querySelectorAll('.gallery-item img'));
+    const imgs = Array.from(document.querySelectorAll('.gallery-item img, .plan-view img'));
     imgs.forEach(img => { img.loading = 'eager'; });
-    const pending = imgs.filter(i => !i.complete).map(i => new Promise(res => {
+    const pending = imgs.filter(i => !i.complete || i.naturalWidth === 0).map(i => new Promise(res => {
       i.addEventListener('load', res, { once: true });
       i.addEventListener('error', res, { once: true });
     }));

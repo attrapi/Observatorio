@@ -481,14 +481,14 @@
     display: inline-flex;
     align-items: center;
     gap: 7px;
-    padding: 6px 14px 6px 12px;
+    padding: 7px 16px 7px 14px;
     border-radius: 999px;
-    background: rgba(232, 200, 140, 0.06);
-    border: 1px solid rgba(232, 200, 140, 0.4);
-    color: var(--accent);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: var(--bg);
     font-family: var(--sans);
     font-size: 10px;
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     cursor: pointer;
@@ -496,23 +496,32 @@
     flex-shrink: 0;
     line-height: 1;
     white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(232, 200, 140, 0.22);
+    animation: btnPlanPulse 2.6s ease-in-out infinite;
   }
   .btn-plan svg {
     width: 13px;
     height: 13px;
-    stroke-width: 1.8;
+    stroke-width: 2;
   }
   .btn-plan:hover {
-    background: var(--accent);
-    color: var(--bg);
+    background: transparent;
+    color: var(--accent);
     border-color: var(--accent);
     transform: translateY(-1px);
-    box-shadow: 0 6px 16px rgba(232, 200, 140, 0.18);
+    box-shadow: 0 6px 18px rgba(232, 200, 140, 0.25);
+    animation: none;
   }
   .btn-plan.active {
-    background: var(--accent);
-    color: var(--bg);
+    background: transparent;
+    color: var(--accent);
     border-color: var(--accent);
+    box-shadow: none;
+    animation: none;
+  }
+  @keyframes btnPlanPulse {
+    0%, 100% { box-shadow: 0 4px 14px rgba(232, 200, 140, 0.22); }
+    50%      { box-shadow: 0 6px 22px rgba(232, 200, 140, 0.45); }
   }
   .btn-plan .btn-plan-caret {
     width: 9px;

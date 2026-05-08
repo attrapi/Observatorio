@@ -954,6 +954,22 @@
     /* En split-2 (Edificio A), planos un poco mas compactos para que quepan bien */
     .split-2 .plan-view img { max-height: 55mm !important; }
 
+    /* Plano dividido en mitades (split-2): mitad izquierda en PB, mitad derecha en PA */
+    .split-2 .plan-view.plan-half {
+      overflow: hidden !important;
+      padding: 0 !important;
+    }
+    .split-2 .plan-view.plan-half img {
+      width: 200% !important;
+      max-width: none !important;
+      max-height: none !important;
+      height: auto !important;
+      padding: 0 !important;
+      display: block !important;
+    }
+    .split-2 .plan-view.plan-half-left img  { margin-left: 0 !important; }
+    .split-2 .plan-view.plan-half-right img { margin-left: -100% !important; }
+
     /* Cierre por edificio + cierre general del recorrido */
     .section-end {
       display: block !important;
@@ -1005,6 +1021,10 @@
 
   /* Elementos solo de impresion: ocultos en pantalla */
   .section-end, .print-footer { display: none; }
+  .plan-view.plan-print-only { display: none !important; }
+  @media print {
+    .plan-view.plan-print-only { display: block !important; }
+  }
 </style>
 </head>
 <body>
@@ -1182,13 +1202,18 @@
       folder: 'Edificio A Planta Baja',
       label: 'Edificio A · Planta Baja',
       files: ['3.jpeg'],
-      video: 'Edificio_A.mp4'
+      video: 'Edificio_A.mp4',
+      plan: 'plano-edificio-A-PA.png',
+      planFolder: 'Edificio A Planta Alta',
+      planHalf: 'left',
+      planScreenHidden: true
     },
     'a-pa': {
       folder: 'Edificio A Planta Alta',
       label: 'Edificio A · Planta Alta',
       files: ['16.jpeg'],
-      plan: 'plano-edificio-A-PA.png'
+      plan: 'plano-edificio-A-PA.png',
+      planHalf: 'right'
     },
     'b': {
       folder: 'Edificio B',
@@ -1264,70 +1289,73 @@
 
     // Inyectar pildora "Plano" y vista expandible del plano (si existe)
     if (data.plan) {
+      const planFolderName = data.planFolder || data.folder;
       const subHeader = container.parentElement.querySelector('.sub-header');
       const sectionEl = container.closest('section.area');
-
-      // Crear la pildora
-      const pill = document.createElement('button');
-      pill.type = 'button';
-      pill.className = 'btn-plan';
-      pill.setAttribute('aria-pressed', 'false');
-      pill.setAttribute('aria-label', 'Mostrar plano de ' + data.label);
-      pill.innerHTML = `
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="3" y="3" width="18" height="18" rx="1.5"/>
-          <path d="M3 11h11"/>
-          <path d="M14 3v18"/>
-          <path d="M14 15h7"/>
-        </svg>
-        <span>Plano</span>
-        <svg class="btn-plan-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      `;
 
       // Crear la vista del plano (sin lazy para que este disponible al imprimir)
       const planView = document.createElement('div');
       planView.className = 'plan-view';
+      if (data.planHalf === 'left') planView.classList.add('plan-half', 'plan-half-left');
+      if (data.planHalf === 'right') planView.classList.add('plan-half', 'plan-half-right');
+      if (data.planScreenHidden) planView.classList.add('plan-print-only');
       planView.innerHTML = `
         <button class="plan-close" type="button" aria-label="Cerrar plano">×</button>
-        <img src="${buildSrc(data.folder, data.plan)}" alt="${data.label} — Plano arquitectónico">
+        <img src="${buildSrc(planFolderName, data.plan)}" alt="${data.label} — Plano arquitectónico">
       `;
 
       // Insertar la vista del plano antes de la galeria, dentro de la subseccion
       container.parentElement.insertBefore(planView, container);
 
-      // Insertar la pildora en el sub-header (antes del .sub-meta) o en una zona de acciones del section-header
-      if (subHeader) {
-        const meta = subHeader.querySelector('.sub-meta');
-        if (meta) subHeader.insertBefore(pill, meta);
-        else subHeader.appendChild(pill);
-      } else if (sectionEl) {
-        const titleWrap = sectionEl.querySelector('.section-title-wrap');
-        if (titleWrap) {
-          let actions = titleWrap.querySelector('.section-actions');
-          if (!actions) {
-            actions = document.createElement('div');
-            actions.className = 'section-actions';
-            titleWrap.appendChild(actions);
+      // Crear y vincular la pildora solo si la vista tambien aparece en pantalla
+      if (!data.planScreenHidden) {
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = 'btn-plan';
+        pill.setAttribute('aria-pressed', 'false');
+        pill.setAttribute('aria-label', 'Mostrar plano de ' + data.label);
+        pill.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="18" height="18" rx="1.5"/>
+            <path d="M3 11h11"/>
+            <path d="M14 3v18"/>
+            <path d="M14 15h7"/>
+          </svg>
+          <span>Plano</span>
+          <svg class="btn-plan-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        `;
+
+        if (subHeader) {
+          const meta = subHeader.querySelector('.sub-meta');
+          if (meta) subHeader.insertBefore(pill, meta);
+          else subHeader.appendChild(pill);
+        } else if (sectionEl) {
+          const titleWrap = sectionEl.querySelector('.section-title-wrap');
+          if (titleWrap) {
+            let actions = titleWrap.querySelector('.section-actions');
+            if (!actions) {
+              actions = document.createElement('div');
+              actions.className = 'section-actions';
+              titleWrap.appendChild(actions);
+            }
+            actions.appendChild(pill);
           }
-          actions.appendChild(pill);
         }
+
+        const togglePlan = (open) => {
+          const isOpen = open !== undefined ? open : !planView.classList.contains('open');
+          planView.classList.toggle('open', isOpen);
+          pill.classList.toggle('active', isOpen);
+          pill.setAttribute('aria-pressed', String(isOpen));
+        };
+        pill.addEventListener('click', () => togglePlan());
+        planView.querySelector('.plan-close').addEventListener('click', () => togglePlan(false));
+
+        const planImg = planView.querySelector('img');
+        planImg.addEventListener('click', () => openPlanLightbox(key));
       }
-
-      // Toggle handlers
-      const togglePlan = (open) => {
-        const isOpen = open !== undefined ? open : !planView.classList.contains('open');
-        planView.classList.toggle('open', isOpen);
-        pill.classList.toggle('active', isOpen);
-        pill.setAttribute('aria-pressed', String(isOpen));
-      };
-      pill.addEventListener('click', () => togglePlan());
-      planView.querySelector('.plan-close').addEventListener('click', () => togglePlan(false));
-
-      // Click en la imagen abre el plano en el lightbox a tamano completo
-      const planImg = planView.querySelector('img');
-      planImg.addEventListener('click', () => openPlanLightbox(key));
     }
 
     const meta = document.querySelector(`.sub-meta[data-count="${key}"]`);
@@ -1368,8 +1396,9 @@
   function openPlanLightbox(galleryKey) {
     const data = galleries[galleryKey];
     if (!data || !data.plan) return;
+    const planFolderName = data.planFolder || data.folder;
     currentGallery = null;
-    lbImg.src = buildSrc(data.folder, data.plan);
+    lbImg.src = buildSrc(planFolderName, data.plan);
     lbImg.alt = data.label + ' — Plano';
     lbCounter.innerHTML = `${data.label}<br><em>Plano arquitectónico</em>`;
     lb.classList.add('plan-mode');

@@ -383,6 +383,17 @@
     font-weight: 500;
   }
 
+  .sub-inventory {
+    font-family: var(--serif);
+    font-style: italic;
+    font-variation-settings: "opsz" 24;
+    font-size: 15px;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    margin: -16px 0 24px;
+    font-weight: 400;
+  }
+
   /* GALLERY */
   .gallery {
     display: grid;
@@ -865,6 +876,18 @@
       margin: 0 !important;
     }
 
+    .sub-inventory {
+      display: block !important;
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 9.5pt !important;
+      color: #691c32 !important;
+      margin: 0 0 3mm !important;
+      letter-spacing: 0.02em;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
     /* GALLERY — 2 columnas uniformes en impresion, anula layouts count-N de pantalla */
     .gallery {
       display: grid !important;
@@ -1159,8 +1182,7 @@
       folder: 'Edificio A Planta Baja',
       label: 'Edificio A · Planta Baja',
       files: ['3.jpeg'],
-      video: 'Edificio_A.mp4',
-      plan: 'plano-edificio-A-PA.png'
+      video: 'Edificio_A.mp4'
     },
     'a-pa': {
       folder: 'Edificio A Planta Alta',
@@ -1185,14 +1207,16 @@
       label: 'Edificio C · Planta Baja (3G y FONADIN)',
       files: ['2.jpeg','4.jpeg','5.jpeg','6.jpeg'],
       video: 'Edificio C Planta Baja.mp4',
-      plan: 'edificioC-PA-Plano.png'
+      plan: 'edificioC-PA-Plano.png',
+      inventory: '17 escritorios · 7 sillas'
     },
     'c-pa': {
       folder: 'Edificio C/C - Planta Alta',
       label: 'Edificio C · Planta Alta (DICCO y R.O. Puente Atirantado (Eloy))',
       files: ['8.jpeg','10.jpeg','11.jpeg','19.jpeg'],
       video: 'Edificio C Planta Alta.mp4',
-      plan: 'C-PA-Plano.png'
+      plan: 'C-PA-Plano.png',
+      inventory: '15 espacios'
     }
   };
 
@@ -1311,6 +1335,17 @@
       const parts = [`${String(n).padStart(2,'0')} ${n === 1 ? 'Vista' : 'Vistas'}`];
       if (data.video) parts.push('01 Video');
       meta.textContent = parts.join(' · ');
+    }
+
+    // Inyectar linea de inventario (visible en pantalla y en impresion)
+    if (data.inventory) {
+      const subHeader = container.parentElement.querySelector('.sub-header');
+      if (subHeader) {
+        const inv = document.createElement('div');
+        inv.className = 'sub-inventory';
+        inv.textContent = data.inventory;
+        subHeader.insertAdjacentElement('afterend', inv);
+      }
     }
   });
 
